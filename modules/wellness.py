@@ -3,7 +3,7 @@ import plotly.express as px
 from .core import protected_table
 
 def render(df,a):
-    st.header('Objective 1 · Wellness condition')
+    st.header('Wellness condition')
     valid=a.dropna(subset=['WHO5_score'])
     st.dataframe(valid[['WHO5_score','PHQ9_score']].describe().round(2),use_container_width=True)
     summary=valid.groupby('College').agg(Responses=('WHO5_score','size'),Mean_WHO5=('WHO5_score','mean'),Low_WHO5=('low_wellbeing','sum'))
