@@ -37,3 +37,16 @@ Upload the authorized **de-identified** ADSSU-CWI CSV from the sidebar. The appl
 WHO-5 scores are calculated from five 0–5 items ×4; values below 50 are screening indicators, not diagnoses. PHQ-9 symptom bands are descriptive and excluded from the predictors. Models use a stratified 80/20 train/test split and 5-fold stratified cross-validation within training data. Clusters are exploratory behavioral segments. Program demand is measured from explicit service selections, not automatic eligibility. Groups and cells under 10 are hidden in intervention tables; this simple suppression is **not a guarantee against inference through overlapping tables**. Review reverse-coding, survey wording, and construct validity with the research team before publication. No row-level safety flags, direct identifiers, or individualized case files are exported. Immediate-danger disclosures and urgent counselor requests require separate confidential human-led processes. The app does not establish student identity or initiate interventions.
 
 **Deployment caution:** This is a research prototype, not a secure clinical or student case-management platform. Session upload and caching do not replace encryption, retention policies, consent, SSO, audit logging, privacy review, and OSAS governance.
+
+### Accessible theme update (November 2026)
+The application now uses a consistent light theme with dark metric values, slate labels,
+and a teal accent. This resolves unreadable dark-on-dark KPI cards when hosted
+in Streamlit Community Cloud. Upload the updated `.streamlit/config.toml`,
+`app.py`, and modules together. In Streamlit Cloud, reboot after committing.
+If your personal Streamlit theme overrides the app theme, choose **Light** from
+Streamlit Settings → Theme.
+
+## Professional interface update
+Navigation labels no longer mention research objective numbers. The application now uses a navy navigation sidebar, light content canvas, high-contrast KPI cards, improved Plotly spacing and titles, horizontal college comparisons, tabs, and consistent chart colors. Computation modules remain separate and heavy analysis runs on demand.
+
+**Privacy:** The application does not implement login or access controls. Deploy only to an institution-approved private environment. Aggregates and interactive filtering may still present disclosure risks; obtain privacy review before operational use.

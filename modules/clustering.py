@@ -2,12 +2,15 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+px.defaults.template = "plotly_white"
+px.defaults.color_discrete_sequence = ["#0F766E", "#2563EB", "#D97706", "#7C3AED", "#0891B2"]
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score,adjusted_rand_score
 from .core import domains,protected_table
+from .theme import polish
 
 @st.cache_data(show_spinner='Computing behavioral clusters...',max_entries=3)
 def fit_clusters(d):
@@ -29,16 +32,16 @@ def fit_clusters(d):
     return q,labels,scatter,profile,ari
 
 def render(df,a):
-    st.header('Behavioral clustering')
+    st.markdown('### Behavioral pattern discovery')
     st.caption('Unsupervised clustering uses behavioral domains, excluding wellness outcome, safety responses, college, and direct identifiers.')
     if not st.button('Run clustering',type='primary',key='run_clusters') and 'cluster_ready' not in st.session_state:return
     st.session_state.cluster_ready=True
     d=domains(df,reverse=True)
     q,labels,scatter,profile,ari=fit_clusters(d)
     st.metric('Cluster stability · mean adjusted Rand index',f'{ari:.3f}')
-    st.plotly_chart(px.line(q,x='k',y='silhouette',markers=True,title='Cluster selection'),use_container_width=True)
-    st.plotly_chart(px.scatter(scatter,x='PC1',y='PC2',color='Cluster',opacity=.65,title='PCA behavioral map'),use_container_width=True)
-    st.plotly_chart(px.imshow(profile,text_auto='.2f',aspect='auto',title='Mean domain scores by cluster'),use_container_width=True)
+    st.plotly_chart(polish(px.line(q,x='k',y='silhouette',markers=True,title='Selecting the number of behavioral segments')),use_container_width=True)
+    st.plotly_chart(polish(px.scatter(scatter,x='PC1',y='PC2',color='Cluster',opacity=.7,title='Student behavioral segments · PCA view')),use_container_width=True)
+    st.plotly_chart(polish(px.imshow(profile,text_auto='.2f',aspect='auto',color_continuous_scale='Teal',title='Behavioral domain profiles')),use_container_width=True)
     cross=pd.crosstab(a.loc[labels.index,'College'],labels)
     safe=protected_table(cross,a.College.value_counts())
     st.subheader('College × cluster (small cells suppressed)')

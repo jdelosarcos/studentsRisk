@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+px.defaults.template = "plotly_white"
+px.defaults.color_discrete_sequence = ["#0F766E", "#2563EB", "#D97706", "#7C3AED", "#0891B2"]
 from scipy.stats import mannwhitneyu,chi2_contingency
 from statsmodels.stats.multitest import multipletests
 from sklearn.model_selection import train_test_split,StratifiedKFold,cross_validate
@@ -14,6 +16,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score,average_precision_score,balanced_accuracy_score,f1_score,recall_score,confusion_matrix,brier_score_loss,roc_curve
 from sklearn.inspection import permutation_importance
 from .core import domains
+from .theme import polish
 
 def features(df):
     x=domains(df)
@@ -66,7 +69,7 @@ def train(x,y):
     return comparison,selected,metrics,importance,pd.DataFrame({'FPR':fpr,'TPR':tpr}),confusion_matrix(yv,pred)
 
 def render(df,a):
-    st.header('Predictors and model validation')
+    st.markdown('### Predictive modeling and evidence')
     valid=a.low_wellbeing.notna()
     x=features(df).loc[valid];y=a.loc[valid,'low_wellbeing'].astype(int)
     st.subheader('Exploratory statistical significance')
@@ -81,7 +84,7 @@ def render(df,a):
         st.success(f'Selected by training CV ROC-AUC: {name}')
         st.dataframe(comp.round(3),hide_index=True,use_container_width=True)
         st.dataframe(pd.DataFrame([metrics]).round(3),hide_index=True,use_container_width=True)
-        st.plotly_chart(px.line(roc,x='FPR',y='TPR',title='Held-out ROC curve'),use_container_width=True)
-        st.plotly_chart(px.imshow(cm,text_auto=True,labels={'x':'Predicted','y':'Observed'},title='Held-out confusion matrix'),use_container_width=True)
-        st.plotly_chart(px.bar(imp.head(12),x='Mean AUC drop',y='Feature',orientation='h',title='Held-out permutation importance'),use_container_width=True)
+        st.plotly_chart(polish(px.line(roc,x='FPR',y='TPR',title='Held-out ROC curve')),use_container_width=True)
+        st.plotly_chart(polish(px.imshow(cm,text_auto=True,color_continuous_scale='Teal',labels={'x':'Predicted','y':'Observed'},title='Held-out confusion matrix')),use_container_width=True)
+        st.plotly_chart(polish(px.bar(imp.head(12).sort_values('Mean AUC drop'),x='Mean AUC drop',y='Feature',orientation='h',title='Predictor importance on held-out data'),520),use_container_width=True)
     st.warning('Prediction is of WHO-5 screening status, not a diagnosis. Threshold 0.5 is not a validated clinical action cutoff; never automate individual referrals.')

@@ -1,10 +1,13 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+px.defaults.template = "plotly_white"
+px.defaults.color_discrete_sequence = ["#0F766E", "#2563EB", "#D97706", "#7C3AED", "#0891B2"]
 from .core import services,protected_table,download_csv
+from .theme import polish,TEAL
 
 def render(df,a):
-    st.header('College intervention planning')
+    st.markdown('### Student support program demand')
     st.info('Primary measure: respondents explicitly selecting a service. This is expressed demand, not confirmed eligibility. A respondent may select multiple services.')
     s=services(df)
     if s.empty:st.warning('No service selections found.');return
@@ -15,9 +18,9 @@ def render(df,a):
     selected=st.selectbox('College',options)
     view=safe if selected=='All colleges' else safe.loc[[selected]]
     st.dataframe(view.style.format(na_rep='Suppressed',precision=0),use_container_width=True)
-    st.plotly_chart(px.imshow(view,aspect='auto',color_continuous_scale='Teal',title='College × requested program (counts below 10 hidden)'),use_container_width=True)
+    st.plotly_chart(polish(px.imshow(view,aspect='auto',color_continuous_scale='Teal',title='Requested services by college · small counts hidden'),max(420,70*len(view))),use_container_width=True)
     download_csv(view,'adssu_suppressed_program_demand.csv','Download suppressed program matrix')
-    st.subheader('College-level response rates for each service')
+    st.subheader('Service request rates by college')
     rates=counts.div(n,axis=0)*100
     rates=rates.loc[safe.index].where(safe.notna())
     st.dataframe(rates.round(1).style.format(na_rep='Suppressed'),use_container_width=True)

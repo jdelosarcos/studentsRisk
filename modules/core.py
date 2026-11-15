@@ -19,8 +19,8 @@ def load_data(raw):
 
 @st.cache_data(show_spinner=False,max_entries=3)
 def enrich(df):
-    who = df.iloc[:,118:123].apply(first_num).where(lambda z: z.ge(0) & z.le(5))
-    phq = df.iloc[:,123:132].apply(first_num).where(lambda z: z.ge(0) & z.le(3))
+    who=df.iloc[:,118:123].apply(first_num).where(lambda z:z.ge(0) & z.le(5))
+    phq=df.iloc[:,123:132].apply(first_num).where(lambda z:z.ge(0) & z.le(3))
     a=pd.DataFrame(index=df.index)
     a['College']=df['College'].fillna('Unspecified').astype(str)
     a['Year level/status']=df['Year level/status'].fillna('Unspecified').astype(str)
