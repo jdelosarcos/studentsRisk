@@ -4,7 +4,7 @@ import plotly.express as px
 from .core import services,protected_table,download_csv
 
 def render(df,a):
-    st.header('Objective 4 · College intervention planning')
+    st.header('College intervention planning')
     st.info('Primary measure: respondents explicitly selecting a service. This is expressed demand, not confirmed eligibility. A respondent may select multiple services.')
     s=services(df)
     if s.empty:st.warning('No service selections found.');return
