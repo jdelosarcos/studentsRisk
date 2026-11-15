@@ -66,7 +66,7 @@ def train(x,y):
     return comparison,selected,metrics,importance,pd.DataFrame({'FPR':fpr,'TPR':tpr}),confusion_matrix(yv,pred)
 
 def render(df,a):
-    st.header('Objectives 2–3 · Predictors and model validation')
+    st.header('Predictors and model validation')
     valid=a.low_wellbeing.notna()
     x=features(df).loc[valid];y=a.loc[valid,'low_wellbeing'].astype(int)
     st.subheader('Exploratory statistical significance')
