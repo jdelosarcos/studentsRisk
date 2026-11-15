@@ -29,7 +29,7 @@ def fit_clusters(d):
     return q,labels,scatter,profile,ari
 
 def render(df,a):
-    st.header('Objective 2 · Behavioral clustering')
+    st.header('· Behavioral clustering')
     st.caption('Unsupervised clustering uses behavioral domains, excluding wellness outcome, safety responses, college, and direct identifiers.')
     if not st.button('Run clustering',type='primary',key='run_clusters') and 'cluster_ready' not in st.session_state:return
     st.session_state.cluster_ready=True
